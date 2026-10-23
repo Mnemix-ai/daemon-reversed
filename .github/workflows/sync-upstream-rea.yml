@@ -1,0 +1,55 @@
+name: Sync upstream REA
+
+on:
+  schedule:
+    - cron: "17 13 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    name: Open a pull request for new upstream commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compare morluto/rea and open a pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git remote add upstream https://github.com/morluto/rea.git
+          git fetch upstream main
+          git fetch origin main
+          missing="$(git rev-list --count origin/main..upstream/main)"
+          if [ "$missing" = "0" ]; then
+            echo "morluto/rea main has no commits that origin/main is missing."
+            exit 0
+          fi
+          echo "morluto/rea main is ${missing} commit(s) ahead of origin/main."
+          branch="sync/upstream-rea"
+          git fetch origin "$branch" || true
+          git checkout -B "$branch" origin/main
+          git -c user.name="github-actions[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            merge --no-ff --no-edit upstream/main
+          if git push origin "$branch"; then
+            echo "Pushed ${branch}."
+          else
+            git push --force-with-lease origin "$branch"
+          fi
+          if gh pr list --head "$branch" --base main --state open --json number --jq 'length > 0' | grep -qx true; then
+            echo "An open sync pull request already exists."
+            exit 0
+          fi
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "chore: sync upstream morluto/rea" \
+            --body "Weekly check found commits on morluto/rea main that are not in this fork. This pull request merges those commits."
