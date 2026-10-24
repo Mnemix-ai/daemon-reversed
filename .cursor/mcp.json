@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "rea": {
+      "command": "/usr/local/bin/node",
+      "args": ["/workspace/scripts/rea.mjs", "mcp"],
+      "env": {
+        "GHIDRA_INSTALL_DIR": "/opt/ghidra",
+        "JAVA_HOME": "/usr/lib/jvm/java-21",
+        "REA_JADX_MCP_JAR": "/opt/jadx/jadx-headless-mcp-0.7.1-all.jar",
+        "REA_WABT_BIN_DIRECTORY": "/opt/wabt/bin",
+        "REA_PWNTOOLS_PYTHON": "/opt/pwntools/bin/python",
+        "REA_BINWALK_COMMAND": "/usr/local/bin/binwalk",
+        "REA_UNBLOB_COMMAND": "/opt/unblob/bin/unblob",
+        "REA_MITMDUMP_COMMAND": "/opt/mitmproxy/bin/mitmdump",
+        "REA_APKTOOL_COMMAND": "/usr/local/bin/apktool"
+      }
+    }
+  }
+}

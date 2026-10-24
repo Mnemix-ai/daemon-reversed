@@ -1,0 +1,8 @@
+{
+  "name": "REA workstation",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "user": "ubuntu",
+  "install": "npm ci && npm run build"
+}

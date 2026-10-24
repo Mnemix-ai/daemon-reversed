@@ -28,6 +28,8 @@ Validate advertised JSON Schemas after SDK conversion against their declared dia
 
 Use [.nvmrc](.nvmrc) and `package.json#packageManager` for the pinned toolchain. Cursor Cloud may place older Node.js first on `PATH`; environment setup installs the pinned toolchain under `/usr/local/bin`.
 
+The cloud workstation image in `.cursor/Dockerfile` is separate from `rea setup`. It installs Node.js 24.18.0, OpenJDK 21, Ghidra 12.1.4 (the verified 12.1 line; Ghidra 12.2 is not admitted), JADX 0.7.1, Apktool, Binwalk 3.1.0, Unblob 26.6.4, WABT 1.0.42, pwntools 4.15.0, mitmproxy 12.2.3, and radare2. Engine paths are exported by `/etc/profile.d/rea-workstation.sh` and by `.cursor/mcp.json`. `scripts/doctor.sh` checks them. Hopper and IDA remain optional. Investigation notes live in `investigations/`.
+
 - `npm ci`: install locked dependencies.
 - `npm run build:cached`: build the runtime and packaged skill.
 - `npm run test:local -- PATH...`: source tests without building.
